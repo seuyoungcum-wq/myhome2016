@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airbird's Space | Creative Developer & Tech Blog</title>
+  <style>
+    /* ==========================================================================
+       1. CSS 변수 & 테마 정의 (Light / Dark Mode)
+       ========================================================================== */
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --accent-primary: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: rgba(37, 99, 235, 0.1);
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+      --shadow-lg: 0 12px 24px rgba(15, 23, 42, 0.1);
+      --nav-bg: rgba(248, 250, 252, 0.85);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0b1120;
+      --bg-secondary: #131c31;
+      --bg-tertiary: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-primary: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --border-color: #1e293b;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5);
+      --nav-bg: rgba(11, 17, 32, 0.85);
+    }
+
+    /* ==========================================================================
+       2. 기본 리셋 & 타이포그래피
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* ==========================================================================
+       3. 레이아웃 유틸리티
+       ========================================================================== */
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 5.5rem 0;
+    }
+
+    .section-header {
+      margin-bottom: 2.75rem;
+    }
+
+    .section-subtitle {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .section-desc {
+      margin-top: 0.5rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+    }
+
+    /* ==========================================================================
+       4. 상단 내비게이션 바 (Sticky Header & Mobile Menu)
+       ========================================================================== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--nav-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 4.25rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--accent-primary);
+      color: #ffffff;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent-primary);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .theme-toggle,
+    .hamburger-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+
+    .theme-toggle:hover,
+    .hamburger-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: translateY(-1px);
+    }
+
+    .hamburger-btn {
+      display: none;
+    }
+
+    /* ==========================================================================
+       5. 히어로 섹션 (Hero)
+       ========================================================================== */
+    .hero {
+      padding: 6.5rem 0 5.5rem;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 720px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      background-color: var(--accent-soft);
+      color: var(--accent-primary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--accent-primary);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.25); }
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title span {
+      color: var(--accent-primary);
+    }
+
+    .hero-tagline {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 2.25rem;
+      line-height: 1.7;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       6. 소개 & 기술 스택 섹션 (About & Skills)
+       ========================================================================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    .about-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .about-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1.1rem;
+    }
+
+    .about-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .skill-badge-card {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      padding: 1.1rem 1.25rem;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .skill-badge-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .skill-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background-color: var(--accent-soft);
+      color: var(--accent-primary);
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .skill-info h4 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .skill-info span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       7. 프로젝트 섹션 (Projects & Filter Tabs)
+       ========================================================================== */
+    .projects-section {
+      background-color: var(--bg-tertiary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background-color: var(--bg-secondary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .project-card.hidden {
+      display: none;
+    }
+
+    .project-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent-primary);
+    }
+
+    .project-thumb {
+      height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--accent-soft), var(--bg-tertiary));
+      border-bottom: 1px solid var(--border-color);
+      color: var(--accent-primary);
+    }
+
+    .project-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .project-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+    }
+
+    .project-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background-color: var(--accent-soft);
+      color: var(--accent-primary);
+    }
+
+    .project-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-primary);
+    }
+
+    .project-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .tag {
+      font-size: 0.78rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      background-color: var(--bg-tertiary);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .project-footer {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      transition: var(--transition);
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       8. 블로그 / 개발 노트 섹션 (Recent Posts & Modal)
+       ========================================================================== */
+    .posts-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.65rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .post-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .post-date {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .post-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .post-excerpt {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .post-read-more {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* 모달 창 스타일 */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 200;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      max-width: 650px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(16px);
+      transition: transform 0.25s ease;
+      position: relative;
+    }
+
+    .modal-backdrop.open .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      background-color: var(--accent-primary);
+      color: #ffffff;
+    }
+
+    .modal-meta {
+      font-size: 0.85rem;
+      color: var(--accent-primary);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal-title {
+      font-size: 1.55rem;
+      font-weight: 800;
+      margin-bottom: 1.25rem;
+      line-height: 1.3;
+      padding-right: 2rem;
+    }
+
+    .modal-content p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.75;
+    }
+
+    .modal-content pre {
+      background-color: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       9. 연락처 섹션 (Contact Form & Social Links)
+       ========================================================================== */
+    .contact-section {
+      background-color: var(--bg-tertiary);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 2.5rem;
+    }
+
+    .contact-info-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .contact-info-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-info-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1.75rem;
+    }
+
+    .social-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .social-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: var(--transition);
+    }
+
+    .social-item:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: translateX(4px);
+    }
+
+    .contact-form {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+      color: var(--text-primary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.82rem;
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    .form-group.invalid .error-msg {
+      display: block;
+    }
+
+    .form-group.invalid .form-control {
+      border-color: #ef4444;
+    }
+
+    /* ==========================================================================
+       10. 푸터 & 토스트 알림 (Footer & Notification Toast)
+       ========================================================================== */
+    footer {
+      padding: 2.25rem 0;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      background-color: var(--text-primary);
+      color: var(--bg-primary);
+      padding: 0.95rem 1.4rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.92rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 300;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       11. 반응형 미디어 쿼리 (Mobile & Tablet)
+       ========================================================================== */
+    @media (max-width: 860px) {
+      .about-grid,
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .hamburger-btn {
+        display: inline-flex;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 4.25rem;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-secondary);
+        border-bottom: 1px solid var(--border-color);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem 1.5rem;
+        gap: 1rem;
+        box-shadow: var(--shadow-md);
+        display: none;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        width: 100%;
+        padding: 0.4rem 0;
+      }
+
+      section {
+        padding: 4rem 0;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. 상단 헤더 & 내비게이션
+       ======================================================================== -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="#" class="logo" aria-label="Airbird's Space 홈으로 이동">
+        <span class="logo-icon">
+          <!-- 미니멀 종이비행기 / 새 심볼 SVG -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 2L11 13"></path>
+            <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+          </svg>
+        </span>
+        Airbird's Space
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#blog">Blog / Notes</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="다크/라이트 테마 전환" title="테마 전환">
+          <!-- 달 / 해 아이콘은 JS로 동적 전환 -->
+          <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="메뉴 열기" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======================================================================
+         2. 히어로 섹션 (Hero)
+         ====================================================================== -->
+    <section class="hero" id="top">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            Creative Developer &amp; Tech Tinkerer
+          </div>
+          <h1 class="hero-title">
+            안녕하세요,<br />
+            <span>Airbird's Space</span>에 오신 걸 환영합니다.
+          </h1>
+          <p class="hero-tagline">
+            웹 기술(HTML/CSS/JS)부터 Python 기반 자동화 툴, 그리고 레트로 아케이드 게임까지—아이디어를 직접 코드로 빚어내는 풀스택 &amp; 크리에이티브 개발자의 작업실입니다.
+          </p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">
+              프로젝트 둘러보기
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+            <a href="#blog" class="btn btn-secondary">개발 노트 읽기</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. 소개 & 기술 스택 섹션 (About & Skills)
+         ====================================================================== -->
+    <section id="about">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">About Me</span>
+          <h2 class="section-title">작고 단단한 소프트웨어를 만듭니다</h2>
+          <p class="section-desc">복잡한 프레임워크 이전에 본질적인 동작 원리와 사용자 경험을 탐구합니다.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <p>
+              반갑습니다! <strong>Airbird</strong>라는 이름으로 웹 애플리케이션, 데스크톱 유틸리티, 그리고 인디 게임을 개발하고 있습니다.
+            </p>
+            <p>
+              순수 웹 표준 기술로 가볍고 빠른 인터페이스를 설계하는 것을 좋아하며, Python을 활용해 반복적인 일상 작업을 자동화하거나 AI 도구를 실험하는 데 큰 즐거움을 느낍니다.
+            </p>
+            <p>
+              이 공간은 제가 만든 작업물들을 아카이빙하고, 개발 과정에서 마주한 시행착오와 배움을 짧은 글로 기록하기 위해 만들어졌습니다.
+            </p>
+          </div>
+
+          <div class="skills-grid">
+            <div class="skill-badge-card">
+              <div class="skill-icon">H5</div>
+              <div class="skill-info">
+                <h4>HTML5</h4>
+                <span>Semantic &amp; Canvas</span>
+              </div>
+            </div>
+            <div class="skill-badge-card">
+              <div class="skill-icon">C3</div>
+              <div class="skill-info">
+                <h4>CSS3</h4>
+                <span>Responsive &amp; Grid/Flex</span>
+              </div>
+            </div>
+            <div class="skill-badge-card">
+              <div class="skill-icon">JS</div>
+              <div class="skill-info">
+                <h4>JavaScript</h4>
+                <span>ES6+ &amp; Vanilla DOM</span>
+              </div>
+            </div>
+            <div class="skill-badge-card">
+              <div class="skill-icon">PY</div>
+              <div class="skill-info">
+                <h4>Python</h4>
+                <span>Automation &amp; AI Scripts</span>
+              </div>
+            </div>
+            <div class="skill-badge-card">
+              <div class="skill-icon">PG</div>
+              <div class="skill-info">
+                <h4>Pygame</h4>
+                <span>2D Arcade &amp; Physics</span>
+              </div>
+            </div>
+            <div class="skill-badge-card">
+              <div class="skill-icon">C#</div>
+              <div class="skill-info">
+                <h4>C#</h4>
+                <span>Desktop &amp; Game Logic</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. 프로젝트 쇼케이스 섹션 (Projects with Filter)
+         ====================================================================== -->
+    <section class="projects-section" id="projects">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Portfolio</span>
+          <h2 class="section-title">주요 프로젝트</h2>
+          <p class="section-desc">카테고리 버튼을 클릭해 웹, 게임, 개발 툴 프로젝트를 분류해 보세요.</p>
+        </div>
+
+        <!-- 필터 버튼 -->
+        <div class="filter-bar" role="tablist" aria-label="프로젝트 카테고리 필터">
+          <button class="filter-btn active" data-filter="all">All (4)</button>
+          <button class="filter-btn" data-filter="web">Web</button>
+          <button class="filter-btn" data-filter="game">Game</button>
+          <button class="filter-btn" data-filter="tool">Tool</button>
+        </div>
+
+        <!-- 프로젝트 카드 그리드 -->
+        <div class="projects-grid" id="projectsGrid">
+          <!-- 카드 1: 레트로 아케이드 너구리 게임 -->
+          <article class="project-card" data-category="game">
+            <div class="project-thumb">
+              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="20" height="12" rx="3"></rect>
+                <line x1="6" y1="12" x2="10" y2="12"></line>
+                <line x1="8" y1="10" x2="8" y2="14"></line>
+                <circle cx="15" cy="11" r="1"></circle>
+                <circle cx="18" cy="13" r="1"></circle>
+              </svg>
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="project-category">Game</span>
+              </div>
+              <h3 class="project-title">레트로 아케이드 '너구리' HTML 게임</h3>
+              <p class="project-desc">
+                고전 오락실 명작 '너구리'를 순수 HTML5 Canvas와 Vanilla JS로 재현한 웹 아케이드 게임입니다. 사다리 타기, 점프 물리, 스테이지 시스템을 구현했습니다.
+              </p>
+              <div class="project-tags">
+                <span class="tag">HTML5 Canvas</span>
+                <span class="tag">Vanilla JS</span>
+                <span class="tag">Web Audio</span>
+              </div>
+              <div class="project-footer">
+                <a href="#projects" class="project-link" onclick="showToast('데모 준비 중입니다! 곧 플레이하실 수 있어요.')">Live Demo →</a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-link">GitHub</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 카드 2: Python Pygame 테트리스 -->
+          <article class="project-card" data-category="game">
+            <div class="project-thumb">
+              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="6" height="6"></rect>
+                <rect x="9" y="3" width="6" height="6"></rect>
+                <rect x="9" y="9" width="6" height="6"></rect>
+                <rect x="15" y="9" width="6" height="6"></rect>
+              </svg>
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="project-category">Game</span>
+              </div>
+              <h3 class="project-title">Python Pygame 클래식 테트리스</h3>
+              <p class="project-desc">
+                Python과 Pygame 라이브러리로 제작한 고전 블록 퍼즐 게임입니다. 고스트 블록, 홀드 기능, 콤보 점수 계산 및 단계별 낙하 속도 가속 로직을 포함합니다.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">Pygame</span>
+                <span class="tag">2D Grid Logic</span>
+              </div>
+              <div class="project-footer">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-link">Source Code →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 카드 3: 커스텀 자동화 & AI 툴 -->
+          <article class="project-card" data-category="tool">
+            <div class="project-thumb">
+              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+              </svg>
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="project-category">Tool</span>
+              </div>
+              <h3 class="project-title">커스텀 자동화 &amp; AI 워크플로우 툴</h3>
+              <p class="project-desc">
+                로컬 파일 일괄 정리, 문서 요약 파이프라인, API 연동을 자동화하는 CLI 및 경량 데스크톱 유틸리티 모음입니다. 반복 작업 시간을 70% 이상 단축했습니다.
+              </p>
+              <div class="project-tags">
+                <span class="tag">Python</span>
+                <span class="tag">C#</span>
+                <span class="tag">LLM API</span>
+              </div>
+              <div class="project-footer">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="project-link">Repository →</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- 카드 4: Airbird's Space 개인 테크 블로그 -->
+          <article class="project-card" data-category="web">
+            <div class="project-thumb">
+              <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="8" y1="14" x2="16" y2="14"></line>
+              </svg>
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="project-category">Web</span>
+              </div>
+              <h3 class="project-title">Airbird's Space 개인 테크 블로그</h3>
+              <p class="project-desc">
+                외부 프레임워크나 무거운 번들러 없이 순수 HTML, CSS, JavaScript만으로 구축한 초경량 반응형 포트폴리오 겸 개발 기록 웹사이트입니다.
+              </p>
+              <div class="project-tags">
+                <span class="tag">HTML5</span>
+                <span class="tag">CSS Variables</span>
+                <span class="tag">Vanilla JS</span>
+              </div>
+              <div class="project-footer">
+                <a href="#top" class="project-link">현재 페이지 ↗</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. 최근 개발 노트 / 블로그 섹션 (Blog / Notes with Modal)
+         ====================================================================== -->
+    <section id="blog">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Blog &amp; Notes</span>
+          <h2 class="section-title">최근 기록과 짧은 단상</h2>
+          <p class="section-desc">카드를 클릭하면 전체 본문 미리보기를 모달 창으로 확인할 수 있습니다.</p>
+        </div>
+
+        <div class="posts-list" id="postsList">
+          <!-- JS에서 렌더링되거나 정적 데이터와 연동 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. 연락처 섹션 (Contact Form & GitHub)
+         ====================================================================== -->
+    <section class="contact-section" id="contact">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-subtitle">Contact</span>
+          <h2 class="section-title">함께 이야기 나눠요</h2>
+          <p class="section-desc">프로젝트 협업 제안, 기술적인 질문, 혹은 가벼운 인사도 언제든 환영합니다.</p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-info-card">
+            <div>
+              <h3>연락처 및 소셜 채널</h3>
+              <p>
+                메시지를 남겨주시면 확인 후 빠르게 회신드리겠습니다. 오픈소스 코드와 진행 중인 실험들은 GitHub에서 확인하실 수 있습니다.
+              </p>
+            </div>
+
+            <div class="social-links">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                </svg>
+                github.com/airbird-dev
+              </a>
+              <a href="mailto:hello@airbird.space" class="social-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                hello@airbird.space
+              </a>
+            </div>
+          </div>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="form-group" id="groupName">
+              <label for="senderName">이름</label>
+              <input type="text" id="senderName" class="form-control" placeholder="홍길동" required />
+              <div class="error-msg">이름을 입력해 주세요.</div>
+            </div>
+
+            <div class="form-group" id="groupEmail">
+              <label for="senderEmail">이메일</label>
+              <input type="email" id="senderEmail" class="form-control" placeholder="example@email.com" required />
+              <div class="error-msg">올바른 이메일 주소를 입력해 주세요.</div>
+            </div>
+
+            <div class="form-group" id="groupMessage">
+              <label for="senderMessage">메시지</label>
+              <textarea id="senderMessage" class="form-control" placeholder="문의하실 내용을 자유롭게 작성해 주세요." required></textarea>
+              <div class="error-msg">메시지 내용을 최소 5자 이상 입력해 주세요.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              메시지 보내기
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       7. 푸터 (Footer)
+       ======================================================================== -->
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Airbird's Space. Built with Pure HTML, CSS &amp; Vanilla JavaScript.</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       8. 블로그 포스트 미리보기 모달 (Post Modal)
+       ======================================================================== -->
+  <div class="modal-backdrop" id="postModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <button class="modal-close" id="modalClose" aria-label="모달 닫기">&times;</button>
+      <div class="modal-meta" id="modalMeta">2026. 11. 12 · Web Dev</div>
+      <h3 class="modal-title" id="modalTitle">포스트 제목</h3>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       9. 알림 토스트 (Notification Toast)
+       ======================================================================== -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastText">메시지가 성공적으로 전송되었습니다!</span>
+  </div>
+
+  <!-- ========================================================================
+       10. Vanilla JavaScript 로직
+       ======================================================================== -->
+  <script>
+    // ------------------------------------------------------------------------
+    // 1. 다크 / 라이트 테마 토글 및 localStorage 저장
+    // ------------------------------------------------------------------------
+    const themeToggleBtn = document.getElementById("themeToggle");
+    const themeIcon = document.getElementById("themeIcon");
+    const htmlEl = document.documentElement;
+
+    const sunSVG = `
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    `;
+
+    const moonSVG = `
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    `;
+
+    function applyTheme(theme) {
+      if (theme === "dark") {
+        htmlEl.setAttribute("data-theme", "dark");
+        themeIcon.innerHTML = sunSVG;
+      } else {
+        htmlEl.removeAttribute("data-theme");
+        themeIcon.innerHTML = moonSVG;
+      }
+      localStorage.setItem("airbird-theme", theme);
+    }
+
+    // 초기 테마 로드 (저장값 -> 시스템 설정 순)
+    const savedTheme = localStorage.getItem("airbird-theme");
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    applyTheme(savedTheme || (prefersDark ? "dark" : "light"));
+
+    themeToggleBtn.addEventListener("click", () => {
+      const currentTheme = htmlEl.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      applyTheme(currentTheme === "dark" ? "light" : "dark");
+    });
+
+    // ------------------------------------------------------------------------
+    // 2. 모바일 햄버거 메뉴 토글
+    // ------------------------------------------------------------------------
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const navLinks = document.getElementById("navLinks");
+
+    hamburgerBtn.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      hamburgerBtn.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    // 모바일 메뉴에서 링크 클릭 시 자동 닫기
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        hamburgerBtn.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // ------------------------------------------------------------------------
+    // 3. 프로젝트 카테고리 필터링 (All, Web, Game, Tool)
+    // ------------------------------------------------------------------------
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const projectCards = document.querySelectorAll(".project-card");
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        // 활성 탭 스타일 변경
+        filterButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const selectedCategory = btn.getAttribute("data-filter");
+
+        projectCards.forEach((card) => {
+          const cardCategory = card.getAttribute("data-category");
+          if (selectedCategory === "all" || cardCategory === selectedCategory) {
+            card.classList.remove("hidden");
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+      });
+    });
+
+    // ------------------------------------------------------------------------
+    // 4. 최근 개발 노트 렌더링 및 모달 미리보기
+    // ------------------------------------------------------------------------
+    const blogPosts = [
+      {
+        id: 1,
+        date: "2026. 11. 14 · Game Dev",
+        title: "순수 Canvas API로 레트로 게임 루프(60FPS) 구현하기",
+        excerpt: "requestAnimationFrame과 deltaTime을 활용해 주사율이 다른 모니터에서도 동일한 속도로 움직이는 게임 루프를 설계한 경험을 공유합니다.",
+        content: `
+          <p>브라우저 기반 아케이드 게임을 만들 때 가장 먼저 마주하는 문제는 모니터 주사율(60Hz, 120Hz, 144Hz)에 따라 캐릭터의 이동 속도가 달라지는 현상입니다.</p>
+          <p>이를 해결하기 위해 프레임 단위가 아닌 <strong>경과 시간(deltaTime)</strong> 기반의 물리 업데이트 루프를 적용했습니다.</p>
+          <pre>let lastTime = 0;
+function gameLoop(timestamp) {
+  const deltaTime = (timestamp - lastTime) / 1000;
+  lastTime = timestamp;
+
+  update(deltaTime);
+  render();
+  requestAnimationFrame(gameLoop);
+}</pre>
+          <p>이 간단한 패턴만으로도 어떤 기기에서든 일관된 조작감과 점프 궤적을 보장할 수 있었습니다.</p>
+        `
+      },
+      {
+        id: 2,
+        date: "2026. 10. 28 · Architecture",
+        title: "프레임워크 없이 Vanilla JS만으로 개인 웹을 만든 이유",
+        excerpt: "빌드 도구와 의존성 없이 HTML, CSS, JS 3개의 표준 기술만으로 유지보수성과 로딩 속도를 극대화하는 방법을 정리했습니다.",
+        content: `
+          <p>현대 프론트엔드 생태계는 강력하지만, 개인 홈페이지나 작은 도구에는 종종 과도한 복잡성을 가져옵니다. node_modules 없이 언제 열어도 0.1초 만에 렌더링되는 웹페이지를 만들고 싶었습니다.</p>
+          <p><strong>CSS Custom Properties(변수)</strong>를 활용하면 별도의 CSS-in-JS 라이브러리 없이도 완벽한 다크/라이트 테마 전환이 가능하며, 시맨틱 태그만으로도 높은 접근성을 확보할 수 있습니다.</p>
+          <p>기본기에 충실한 코드는 몇 년 뒤에 다시 열어보아도 직관적으로 이해할 수 있다는 큰 장점이 있습니다.</p>
+        `
+      },
+      {
+        id: 3,
+        date: "2026. 10. 05 · Python & Automation",
+        title: "Python 스크립트로 반복적인 파일 정리 자동화하기",
+        excerpt: "다운로드 폴더에 쌓이는 스크린샷, 문서, 압축 파일을 확장자와 날짜별로 자동 분류하는 경량 CLI 툴 제작기입니다.",
+        content: `
+          <p>매일 작업하다 보면 바탕화면과 다운로드 폴더가 금세 어지러워집니다. Python의 표준 라이브러리인 <code>pathlib</code>과 <code>shutil</code>만 있으면 50줄 남짓한 코드로 훌륭한 자동화 비서를 만들 수 있습니다.</p>
+          <pre>from pathlib import Path
+import shutil
+
+for file in Path.home().joinpath("Downloads").iterdir():
+    if file.is_file() and file.suffix == ".pdf":
+        target = file.parent / "Documents"
+        target.mkdir(exist_ok=True)
+        shutil.move(str(file), str(target / file.name))</pre>
+          <p>작은 불편함을 코드로 직접 해결하는 과정은 언제나 개발자에게 가장 큰 보람을 줍니다.</p>
+        `
+      }
+    ];
+
+    const postsListEl = document.getElementById("postsList");
+    const postModal = document.getElementById("postModal");
+    const modalClose = document.getElementById("modalClose");
+    const modalMeta = document.getElementById("modalMeta");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalContent = document.getElementById("modalContent");
+
+    // 카드 목록 동적 생성
+    blogPosts.forEach((post) => {
+      const card = document.createElement("article");
+      card.className = "post-card";
+      card.innerHTML = `
+        <div>
+          <span class="post-date">${post.date}</span>
+          <h3 class="post-title">${post.title}</h3>
+          <p class="post-excerpt">${post.excerpt}</p>
+        </div>
+        <span class="post-read-more">글 읽어보기 →</span>
+      `;
+      card.addEventListener("click", () => openPostModal(post));
+      postsListEl.appendChild(card);
+    });
+
+    function openPostModal(post) {
+      modalMeta.textContent = post.date;
+      modalTitle.textContent = post.title;
+      modalContent.innerHTML = post.content;
+      postModal.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closePostModal() {
+      postModal.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    modalClose.addEventListener("click", closePostModal);
+    postModal.addEventListener("click", (e) => {
+      if (e.target === postModal) closePostModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && postModal.classList.contains("open")) {
+        closePostModal();
+      }
+    });
+
+    // ------------------------------------------------------------------------
+    // 5. 연락처 폼 클라이언트 유효성 검사 및 알림 토스트
+    // ------------------------------------------------------------------------
+    const contactForm = document.getElementById("contactForm");
+    const toastEl = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+    let toastTimer = null;
+
+    function showToast(message) {
+      toastText.textContent = message;
+      toastEl.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 3200);
+    }
+
+    contactForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById("senderName");
+      const emailInput = document.getElementById("senderEmail");
+      const msgInput = document.getElementById("senderMessage");
+
+      const groupName = document.getElementById("groupName");
+      const groupEmail = document.getElementById("groupEmail");
+      const groupMessage = document.getElementById("groupMessage");
+
+      let isValid = true;
+
+      // 이름 검증
+      if (nameInput.value.trim().length < 1) {
+        groupName.classList.add("invalid");
+        isValid = false;
+      } else {
+        groupName.classList.remove("invalid");
+      }
+
+      // 이메일 형식 검증
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(emailInput.value.trim())) {
+        groupEmail.classList.add("invalid");
+        isValid = false;
+      } else {
+        groupEmail.classList.remove("invalid");
+      }
+
+      // 메시지 길이 검증
+      if (msgInput.value.trim().length < 5) {
+        groupMessage.classList.add("invalid");
+        isValid = false;
+      } else {
+        groupMessage.classList.remove("invalid");
+      }
+
+      if (isValid) {
+        showToast(`${nameInput.value.trim()}님, 메시지가 성공적으로 전달되었습니다!`);
+        contactForm.reset();
+      }
+    });
+  </script>
+</body>
+</html>
